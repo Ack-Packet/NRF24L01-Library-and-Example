@@ -1,0 +1,75 @@
+ÀÄPRXdevice
+   ÀÄMAIN  0/167  Ram=1
+      ÃÄ@cinit1  (Inline)  Ram=0
+      ÃÄrf_init  0/10  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄRX_config  0/20  Ram=1
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄEnhanced_Shockburst  0/20  Ram=1
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄRX_addresses  0/20  Ram=1
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄaddress_width  0/20  Ram=1
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄAuto_retransmit  0/20  Ram=1
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄRF_channel  0/20  Ram=1
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄRF_set  0/20  Ram=1
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄwrite_STATUS  0/18  Ram=1
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄwrite_RX_ADDR  0/43  Ram=5
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄwrite_TX_ADDR  0/43  Ram=5
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄwrite_num_of_points  0/20  Ram=3
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄwrite_num_of_points  0/20  Ram=3
+      ³  ÀÄ*
+      ÃÄwrite_num_of_points  0/20  Ram=3
+      ³  ÀÄ*
+      ÃÄwrite_num_of_points  0/20  Ram=3
+      ³  ÀÄ*
+      ÃÄwrite_num_of_points  0/20  Ram=3
+      ³  ÀÄ*
+      ÃÄwrite_num_of_points  0/20  Ram=3
+      ³  ÀÄ*
+      ÃÄwrite_dynp  0/20  Ram=1
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄwrite_feature  0/20  Ram=1
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄ@delay_ms1  0/21  Ram=1
+      ÃÄread_payload  0/70  Ram=5
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÃÄpulse_CSN  0/18  Ram=0
+      ³  ÃÄwrite_STATUS  0/18  Ram=1
+      ³  ³  ÀÄ*
+      ³  ÃÄ@delay_ms1  0/21  Ram=1
+      ³  ÃÄRX_DR  0/38  Ram=1
+      ³  ³  ÀÄread_STATUS  (Inline)  Ram=1
+      ³  ³     ÃÄpulse_CSN  0/18  Ram=0
+      ³  ³     ÀÄpulse_CSN  0/18  Ram=0
+      ³  ÀÄflushrx  0/11  Ram=0
+      ³     ÃÄpulse_CSN  0/18  Ram=0
+      ³     ÀÄpulse_CSN  0/18  Ram=0
+      ÃÄwrite_STATUS  0/18  Ram=1
+      ³  ÀÄ*
+      ÃÄ@delay_ms1  0/21  Ram=1
+      ÃÄRX_DR  0/38  Ram=1
+      ³  ÀÄ*
+      ÀÄflushrx  0/11  Ram=0
+         ÀÄ*

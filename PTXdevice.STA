@@ -1,0 +1,47 @@
+
+ROM used:   27/8192 (0%)
+            27/8192 (0%) including unused fragments
+
+            0.0 Average locations per line
+            9.0 Average locations per statement
+
+RAM used:   10/368 (3%) at main() level
+            10/368 (3%) worst case
+
+Stack used: 0 worst case (0 in main + 0 for interrupts)
+Stack size: 8
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   30     3 100  PTXdevice.c
+  674     0   0  ..\..\..\..\Program Files (x86)\PICC\Devices\16f877a.h
+----- -----
+  704     3 Total
+
+Page ROM  %  RAM    Vol Diff  Functions:
+---- --- --- ---    --- ----  ----------
+0     23  85    0      3  0.0  MAIN
+ Inline         0    141  1.8  @cinit1
+
+Program metrics:
+    Functions               2
+    Statements              3
+    Comments                121
+    Volume (V)              156
+    Difficulty (D)          2.5
+    Effort to implement (E) 390
+    Time to implement (T)   0 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   1
+    Maintainability (MI)    117
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-007FF    23  2021  
+00800-00FFF     0  2048  
+01000-017FF     0  2048  
+01800-01FFF     0  2048  
+
+
+

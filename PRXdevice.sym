@@ -1,0 +1,116 @@
+004-005 @WRITE_PROGRAM_MEMORY8.P1
+004-005 @READ_PROGRAM_MEMORY8.P2
+008     PSP_DATA
+015     CCP_1
+015     CCP_1_LOW
+016     CCP_1_HIGH
+01B     CCP_2
+01B     CCP_2_LOW
+01C     CCP_2_HIGH
+020     @TRIS_C
+021-025 Rx_address
+026-027 RX
+028-02C data
+02D-02E write_TX_ADDR.data
+02D     RX_addresses.data
+02D     RF_set.data
+02D     write_feature.data
+02D     Enhanced_Shockburst.data
+02D     @SPI_XFER_1_8.P1
+02D     write_dynp.data
+02D-02E read_payload.data
+02D     address_width.data
+02D-02E write_RX_ADDR.data
+02D     Auto_retransmit.data
+02D     RF_channel.data
+02D     RX_config.data
+02D     write_num_of_points.address
+02D     MAIN.@SCRATCH1
+02E     write_num_of_points.data
+02F     write_RX_ADDR.address
+02F     write_TX_ADDR.address
+02F     read_payload.i
+02F     write_num_of_points.@SCRATCH1
+030     write_STATUS.data
+030     read_STATUS.data
+030     write_RX_ADDR.i
+030     write_TX_ADDR.i
+030     @delay_ms1.P1
+030     read_payload.@SCRATCH1
+030     RX_DR.@SCRATCH1
+031     write_RX_ADDR.@SCRATCH1
+031     write_TX_ADDR.@SCRATCH1
+031     read_payload.@SCRATCH2
+077     @SCRATCH
+078     @SCRATCH
+078     _RETURN_
+079     @SCRATCH
+07A     @SCRATCH
+09C.6   C1OUT
+09C.7   C2OUT
+10D-10E @WRITE_PROGRAM_MEMORY8.P1
+10D-10E @READ_PROGRAM_MEMORY8.P2
+
+ROM Allocation:
+000004  pulse_CSN
+000016  rf_init
+000020  RX_config
+000034  Enhanced_Shockburst
+000048  RX_addresses
+00005C  address_width
+000070  Auto_retransmit
+000084  RF_channel
+000098  RF_set
+0000AC  write_STATUS
+0000BE  write_RX_ADDR
+0000E9  write_TX_ADDR
+000114  write_num_of_points
+000128  write_dynp
+00013C  write_feature
+000150  @delay_ms1
+000165  read_STATUS
+000165  RX_DR
+00018B  flushrx
+000196  read_payload
+0001DC  MAIN
+0001DC  @cinit1
+0001FC  @cinit2
+
+Project Directory:
+    C:\Users\omeru\Desktop\CCS Example\SPI Example nRF\
+
+Project Files:
+    PRXdevice.c                                             [08-Eki-19 02:06  CRC=7EAB70F8]
+    ..\..\..\..\..\Program Files (x86)\PICC\Devices\16f877a.h [24-Þub-17 16:21  CRC=6248FE08]
+    Functions.c                                             [08-Eki-19 01:53  CRC=6E4C6AE5]
+    my_nrf.c                                                [08-Eki-19 02:03  CRC=42FE1083]
+    my_nrf.h                                                [01-Eki-19 22:21  CRC=9CC84275]
+
+Source signature=CBCF6F52
+Program memory checksum=0000
+Program memory CRC=0000
+Hex file CRC=0641
+
+Units:
+    PRXdevice (main)
+
+Compiler Settings:
+    Processor:      PIC16F877A
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+    Compile Mode:       CCS5
+
+Output Files:
+    XREF file:   PRXdevice.xsym
+    Errors:      PRXdevice.err
+    Ext Symbols: PRXdevice.esym
+    INHX8:       PRXdevice.hex
+    Symbols:     PRXdevice.sym
+    List:        PRXdevice.lst
+    Debug/COFF:  PRXdevice.cof
+    Project:     PRXdevice.ccspjt
+    Call Tree:   PRXdevice.tre
+    Statistics:  PRXdevice.STA

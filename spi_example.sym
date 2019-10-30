@@ -1,0 +1,118 @@
+004-005 @WRITE_PROGRAM_MEMORY8.P1
+004-005 @READ_PROGRAM_MEMORY8.P2
+008     PSP_DATA
+015     CCP_1
+015     CCP_1_LOW
+016     CCP_1_HIGH
+01B     CCP_2
+01B     CCP_2_LOW
+01C     CCP_2_HIGH
+020     @TRIS_C
+021-025 Rx_address
+026-02A Tx_address
+02B-02C TX
+02D-02E RX
+02F-038 data
+039     write_dynp.data
+039     address_width.data
+039     RF_set.data
+039     Enhanced_Shockburst.data
+039     RX_addresses.data
+039     TX_config.data
+039     write_feature.data
+039     write_STATUS.data
+039     RF_channel.data
+039     @SPI_XFER_1_8.P1
+039-03A write_payload.data
+039-03A write_TX_ADDR.data
+039     Auto_retransmit.data
+039     read_STATUS.data
+039-03A write_RX_ADDR.data
+039     TX_DS.@SCRATCH1
+039     MAIN.@SCRATCH1
+03A     @delay_ms1.P1
+03B     write_payload.i
+03B     write_RX_ADDR.address
+03B     write_TX_ADDR.address
+03C     write_TX_ADDR.i
+03C     write_RX_ADDR.i
+03C-03D i_length.d
+03C     write_payload.@SCRATCH1
+03D     write_RX_ADDR.@SCRATCH1
+03D     write_TX_ADDR.@SCRATCH1
+03E     i_length.len
+03F     i_length.@SCRATCH1
+077     @SCRATCH
+078     @SCRATCH
+078     _RETURN_
+079     @SCRATCH
+07A     @SCRATCH
+09C.6   C1OUT
+09C.7   C2OUT
+10D-10E @WRITE_PROGRAM_MEMORY8.P1
+10D-10E @READ_PROGRAM_MEMORY8.P2
+
+ROM Allocation:
+000004  pulse_CSN
+000016  rf_init
+000020  TX_config
+000034  Enhanced_Shockburst
+000048  RX_addresses
+00005C  address_width
+000070  Auto_retransmit
+000084  RF_channel
+000098  RF_set
+0000AC  write_STATUS
+0000BE  write_RX_ADDR
+0000E9  write_TX_ADDR
+000114  write_dynp
+000128  write_feature
+00013C  flushrx
+000149  flushtx
+000154  @delay_ms1
+000169  write_payload
+000177  i_length
+0001BB  TX_DS
+0001BB  read_STATUS
+0001E2  @cinit1
+0001E2  MAIN
+000202  @cinit2
+
+Project Directory:
+    C:\Users\omeru\Desktop\CCS Example\SPI Example nRF\
+
+Project Files:
+    spi_example.c                                           [08-Eki-19 02:28  CRC=327E318F]
+    ..\..\..\..\..\Program Files (x86)\PICC\Devices\16f877a.h [24-Þub-17 16:21  CRC=6248FE08]
+    my_nrf.c                                                [27-Eki-19 18:42  CRC=58E500C4]
+    my_nrf.h                                                [01-Eki-19 22:21  CRC=9CC84275]
+    Functions.c                                             [08-Eki-19 01:53  CRC=6E4C6AE5]
+
+Source signature=670D489A
+Program memory checksum=0000
+Program memory CRC=0000
+Hex file CRC=789D
+
+Units:
+    spi_example (main)
+
+Compiler Settings:
+    Processor:      PIC16F877A
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+    Compile Mode:       CCS5
+
+Output Files:
+    XREF file:   spi_example.xsym
+    Errors:      spi_example.err
+    Ext Symbols: spi_example.esym
+    INHX8:       spi_example.hex
+    Symbols:     spi_example.sym
+    List:        spi_example.lst
+    Debug/COFF:  spi_example.cof
+    Project:     spi_example.ccspjt
+    Call Tree:   spi_example.tre
+    Statistics:  spi_example.STA

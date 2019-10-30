@@ -1,0 +1,39 @@
+[PROJECT]
+Target=PTXdevice.hex
+Processor_Text=PIC16F877A
+CCSVersion=5.070
+Compiler=PCM
+[Target Data]
+FileList=PTXdevice.c
+[PTXdevice.c]
+Type=4
+[mru-list]
+1=PTXdevice.c
+
+[defines]
+buildcount=3
+
+[Opened Files]
+1=spi_example.c
+t1=1
+2=my_nrf.c
+t2=187
+3=PRXdevice.c
+t3=1
+4=PTXdevice.c
+t4=1
+Count=4
+[Units]
+Count=1
+1=PTXdevice (main)
+
+[ProjectLog]
+Days=1
+D1=27-09-2019
+D1_L=2
+D1_L1=[66460]Stopped Editing.
+TotalEdit=4
+TotalDebug=0
+D1_E=4
+D1_D=0
+D1_L2=[66460]Project Closed.

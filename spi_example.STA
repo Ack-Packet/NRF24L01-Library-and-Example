@@ -1,0 +1,71 @@
+
+ROM used:   643/8192 (8%)
+            643/8192 (8%) including unused fragments
+
+            0.5 Average locations per line
+            3.3 Average locations per statement
+
+RAM used:   31/368 (8%) at main() level
+            37/368 (10%) worst case
+
+Stack used: 2 worst case (2 in main + 0 for interrupts)
+Stack size: 8
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   76    35  18  spi_example.c
+  674     0   0  ..\..\..\..\..\Program Files (x86)\PICC\Devices\16f877a.h
+  344   149  78  my_nrf.c
+   87     0   0  my_nrf.h
+   20     8   4  Functions.c
+----- -----
+ 1201   192 Total
+
+Page ROM  %  RAM    Vol Diff  Functions:
+---- --- --- ---    --- ----  ----------
+0     21   3    1             @delay_ms1
+ Inline         4    125  5.0  i_length
+0     18   3    0     48  1.1  pulse_CSN
+0     20   3    1     84  1.7  TX_config
+0     20   3    1     84  1.7  Enhanced_Shockburst
+0     20   3    1     84  1.7  RX_addresses
+0     20   3    1     84  1.7  address_width
+0     20   3    1     84  1.7  Auto_retransmit
+0     20   3    1     84  1.7  RF_channel
+0     20   3    1     84  1.7  RF_set
+0     18   3    1     84  1.7  write_STATUS
+ Inline         1    117  2.6  read_STATUS
+0     43   7    5    214  5.3  write_RX_ADDR
+0     43   7    5    214  5.3  write_TX_ADDR
+0     82  13    4    262  4.3  write_payload
+0     20   3    1     84  1.7  write_feature
+0     20   3    1     84  1.7  write_dynp
+0     11   2    0     38  1.0  flushtx
+0     13   2    0     38  1.0  flushrx
+0     10   2    0     27  0.9  rf_init
+0     39   6    1     78  2.9  TX_DS
+0    161  25    1   1043  6.0  MAIN
+ Inline         0             @cinit1
+
+Program metrics:
+    Functions               21
+    Statements              192
+    Comments                159
+    Volume (V)              5575
+    Difficulty (D)          52.9
+    Effort to implement (E) 294910
+    Time to implement (T)   4 hours, 33 minutes
+    Est Delivered Bugs (B)  1
+    Cyclomatic Complexity   6
+    Maintainability (MI)    61
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-007FF   639  1405  
+00800-00FFF     0  2048  
+01000-017FF     0  2048  
+01800-01FFF     0  2048  
+
+
+

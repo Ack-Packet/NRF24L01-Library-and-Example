@@ -1,0 +1,1215 @@
+CCS PCM C Compiler, Version 5.070, 56587               27-Eki-19 18:42
+
+               Filename:   C:\Users\omeru\Desktop\CCS Example\SPI Example nRF\spi_example.lst
+
+               ROM used:   643 words (8%)
+                           Largest free fragment is 2048
+               RAM used:   31 (8%) at main() level
+                           37 (10%) worst case
+               Stack used: 2 locations
+               Stack size: 8
+
+*
+0000:  MOVLW  01
+0001:  MOVWF  0A
+0002:  GOTO   1E2
+0003:  NOP
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2014 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #use delay(crystal=16MHz) 
+*
+0154:  MOVLW  3A
+0155:  MOVWF  04
+0156:  BCF    03.7
+0157:  MOVF   00,W
+0158:  BTFSC  03.2
+0159:  GOTO   168
+015A:  MOVLW  05
+015B:  MOVWF  78
+015C:  CLRF   77
+015D:  DECFSZ 77,F
+015E:  GOTO   15D
+015F:  DECFSZ 78,F
+0160:  GOTO   15C
+0161:  MOVLW  2E
+0162:  MOVWF  77
+0163:  DECFSZ 77,F
+0164:  GOTO   163
+0165:  GOTO   166
+0166:  DECFSZ 00,F
+0167:  GOTO   15A
+0168:  RETURN
+.................... #FUSES PUT                      //Power Up Timer 
+.................... #FUSES NOBROWNOUT               //No brownout reset 
+.................... #FUSES NOLVP                    //No low voltage prgming, B3(PIC16) or B5(PIC18) used for I/O 
+.................... #FUSES NOCPD                    //No EE protection 
+.................... #FUSES NOWRT                    //Program memory not write protected 
+.................... #FUSES NOPROTECT                //Code not protected from reading 
+.................... #FUSES NODEBUG 
+.................... #FUSES NOWDT 
+....................  
+.................... #define CE pin_c0  
+.................... #define CSN pin_c1  
+.................... #define IRQ pin_c2 
+....................  
+.................... #use spi (MASTER, SPI1, MODE=0, BITS=8) 
+.................... #include <my_nrf.c> 
+.................... #include <my_nrf.h> 
+.................... //Memory Map 
+.................... #define CONFIG 0x00 
+.................... #define EN_AA 0x01 
+.................... #define EN_RXADDR 0x02 
+.................... #define SETUP_AW 0x03 
+.................... #define SETUP_RETR 0x04 
+.................... #define RF_CH 0x05 
+.................... #define RF_SETUP 0x06 
+.................... #define STATUS 0x07 
+.................... #define OBSERVE_TX 0x08 
+.................... #define RPD 0x09 
+.................... #define RX_ADDR_P0 0x0A 
+.................... #define RX_ADDR_P1 0x0B 
+.................... #define RX_ADDR_P2 0x0C 
+.................... #define RX_ADDR_P3 0x0D 
+.................... #define RX_ADDR_P4 0x0E 
+.................... #define RX_ADDR_P5 0x0F 
+.................... #define TX_ADDR 0x10 
+.................... #define RX_PW_P0 0x11 
+.................... #define RX_PW_P1 0x12 
+.................... #define RX_PW_P2 0x13 
+.................... #define RX_PW_P3 0x14 
+.................... #define RX_PW_P4 0x15 
+.................... #define RX_PW_P5 0x16 
+.................... #define FIFO_STATUS 0x17 
+.................... #define DYNPD 0x1C 
+.................... #define FEATURE 0x1D 
+....................  
+.................... #define R_REGISTER 0x00 
+.................... #define W_REGISTER 0x20 
+.................... #define R_RX_PAYLOAD 0x61 
+.................... #define W_TX_PAYLOAD 0xA0 
+.................... #define FLUSH_TX 0xE1 
+.................... #define FLUSH_RX 0xE2 
+.................... #define R_RX_PL_WID 0x60 
+.................... #define W_ACK_PAYLOAD 0xA8 
+.................... #define W_TX_PAYLOAD_NO_ACK 0xB0 
+....................  
+.................... #define CSN_enable output_low(CSN) 
+.................... #define CSN_disable output_high(CSN) 
+.................... #define CE_enable output_high(CE) 
+.................... #define CE_disable output_low(CE) 
+....................  
+.................... #ifndef CE 
+.................... #define CE pin_c0 
+.................... #endif 
+....................  
+.................... #ifndef CSN 
+.................... #define CSN pin_c1 
+.................... #endif 
+....................  
+.................... #ifndef IRQ 
+.................... #define IRQ pin_c2 
+.................... #endif 
+....................  
+.................... void pulse_CSN(); 
+.................... void TX_config(unsigned int data); 
+.................... unsigned int read_config(); 
+.................... void RX_config(unsigned int data); 
+.................... void Enhanced_Shockburst(unsigned int data); 
+.................... void RX_addresses(unsigned int data); 
+.................... void address_width(unsigned int data); 
+.................... void Auto_retransmit(unsigned int data); 
+.................... void RF_channel(unsigned int data); 
+.................... void RF_set(unsigned int data); 
+.................... void write_STATUS(unsigned int data); 
+.................... unsigned int read_STATUS(); 
+.................... unsigned int read_observe_tx(); 
+.................... void write_RX_ADDR(unsigned int *data,unsigned int address); 
+.................... unsigned int *read_RX_ADDR(unsigned int address); 
+.................... void write_TX_ADDR(unsigned int *data,unsigned int address); 
+.................... unsigned int *read_TX_ADDR(unsigned int address); 
+.................... void write_num_of_points(unsigned int address,unsigned int data); 
+.................... unsigned int read_num_of_points(unsigned int address); 
+.................... unsigned int read_fifo_status(); 
+.................... void write_payload(unsigned int *data); 
+.................... unsigned int read_payload(); 
+.................... void write_feature(unsigned int data); 
+.................... void write_dynp(unsigned int data); 
+.................... void flushtx(); 
+.................... void flushrx(); 
+.................... void rf_init(); 
+.................... int1 RX_DR(); 
+.................... int1 TX_DS(); 
+.................... int1 MAX_RT(); 
+.................... unsigned int RX_P_NO(); 
+....................  
+.................... #include <Functions.c> 
+.................... unsigned int c_length(char *c) 
+.................... { 
+....................    unsigned int len=0; 
+....................    while(*(c+len)!='\0') 
+....................    { 
+....................       len++; 
+....................    } 
+....................    return len; 
+.................... } 
+....................  
+.................... unsigned int i_length(unsigned int *d) 
+*
+0177:  CLRF   3E
+.................... { 
+....................    unsigned int len=0; 
+....................    while(*(d+len)!=0) 
+0178:  MOVF   3E,W
+0179:  ADDWF  3C,W
+017A:  MOVWF  78
+017B:  MOVF   3D,W
+017C:  MOVWF  7A
+017D:  BTFSC  03.0
+017E:  INCF   7A,F
+017F:  MOVF   78,W
+0180:  MOVWF  04
+0181:  BCF    03.7
+0182:  BTFSC  7A.0
+0183:  BSF    03.7
+0184:  MOVF   00,F
+0185:  BTFSC  03.2
+0186:  GOTO   189
+....................    { 
+....................       len++; 
+0187:  INCF   3E,F
+0188:  GOTO   178
+....................    } 
+....................    return len; 
+0189:  MOVF   3E,W
+018A:  MOVWF  78
+.................... } 
+....................  
+....................  
+.................... void pulse_CSN() 
+.................... { 
+....................    CSN_disable; 
+*
+0004:  BCF    20.1
+0005:  MOVF   20,W
+0006:  BSF    03.5
+0007:  MOVWF  07
+0008:  BCF    03.5
+0009:  BSF    07.1
+....................    delay_us(20); 
+000A:  MOVLW  1A
+000B:  MOVWF  77
+000C:  DECFSZ 77,F
+000D:  GOTO   00C
+000E:  NOP
+....................    CSN_enable; 
+000F:  BCF    20.1
+0010:  MOVF   20,W
+0011:  BSF    03.5
+0012:  MOVWF  07
+0013:  BCF    03.5
+0014:  BCF    07.1
+0015:  RETURN
+.................... } 
+....................  
+.................... void TX_config(unsigned int data) 
+.................... { 
+....................    pulse_CSN(); 
+*
+0020:  CALL   004
+....................    spi_write(W_REGISTER+CONFIG); 
+0021:  MOVF   13,W
+0022:  MOVLW  20
+0023:  MOVWF  13
+0024:  BSF    03.5
+0025:  RRF    14,W
+0026:  BTFSS  03.0
+0027:  GOTO   025
+....................    spi_write(data); 
+0028:  BCF    03.5
+0029:  MOVF   39,W
+002A:  MOVWF  13
+002B:  BSF    03.5
+002C:  RRF    14,W
+002D:  BTFSS  03.0
+002E:  GOTO   02C
+....................    pulse_CSN(); 
+002F:  BCF    03.5
+0030:  CALL   004
+0031:  BCF    0A.3
+0032:  BCF    0A.4
+0033:  GOTO   236 (RETURN)
+.................... } 
+....................  
+.................... unsigned int read_config() 
+.................... { 
+....................    unsigned int data; 
+....................    pulse_CSN(); 
+....................    spi_write(R_REGISTER+CONFIG); 
+....................    data=spi_read(0); 
+....................    pulse_CSN(); 
+....................     
+....................    return data; 
+.................... } 
+....................  
+.................... void RX_config(unsigned int data) 
+.................... { 
+....................    pulse_CSN(); 
+....................    spi_write(W_REGISTER+CONFIG); 
+....................    spi_write(data); 
+....................    pulse_CSN(); 
+.................... } 
+....................  
+.................... void Enhanced_Shockburst(unsigned int data) 
+.................... { 
+....................    pulse_CSN(); 
+0034:  CALL   004
+....................    spi_write(W_REGISTER+EN_AA); 
+0035:  MOVF   13,W
+0036:  MOVLW  21
+0037:  MOVWF  13
+0038:  BSF    03.5
+0039:  RRF    14,W
+003A:  BTFSS  03.0
+003B:  GOTO   039
+....................    spi_write(data); 
+003C:  BCF    03.5
+003D:  MOVF   39,W
+003E:  MOVWF  13
+003F:  BSF    03.5
+0040:  RRF    14,W
+0041:  BTFSS  03.0
+0042:  GOTO   040
+....................    pulse_CSN(); 
+0043:  BCF    03.5
+0044:  CALL   004
+0045:  BCF    0A.3
+0046:  BCF    0A.4
+0047:  GOTO   238 (RETURN)
+.................... } 
+....................  
+.................... void RX_addresses(unsigned int data) 
+.................... { 
+....................    pulse_CSN(); 
+0048:  CALL   004
+....................    spi_write(W_REGISTER+EN_RXADDR); 
+0049:  MOVF   13,W
+004A:  MOVLW  22
+004B:  MOVWF  13
+004C:  BSF    03.5
+004D:  RRF    14,W
+004E:  BTFSS  03.0
+004F:  GOTO   04D
+....................    spi_write(data); 
+0050:  BCF    03.5
+0051:  MOVF   39,W
+0052:  MOVWF  13
+0053:  BSF    03.5
+0054:  RRF    14,W
+0055:  BTFSS  03.0
+0056:  GOTO   054
+....................    pulse_CSN(); 
+0057:  BCF    03.5
+0058:  CALL   004
+0059:  BCF    0A.3
+005A:  BCF    0A.4
+005B:  GOTO   23B (RETURN)
+.................... } 
+....................  
+.................... void address_width(unsigned int data) 
+.................... { 
+....................    pulse_CSN(); 
+005C:  CALL   004
+....................    spi_write(W_REGISTER+SETUP_AW); 
+005D:  MOVF   13,W
+005E:  MOVLW  23
+005F:  MOVWF  13
+0060:  BSF    03.5
+0061:  RRF    14,W
+0062:  BTFSS  03.0
+0063:  GOTO   061
+....................    spi_write(data); 
+0064:  BCF    03.5
+0065:  MOVF   39,W
+0066:  MOVWF  13
+0067:  BSF    03.5
+0068:  RRF    14,W
+0069:  BTFSS  03.0
+006A:  GOTO   068
+....................    pulse_CSN(); 
+006B:  BCF    03.5
+006C:  CALL   004
+006D:  BCF    0A.3
+006E:  BCF    0A.4
+006F:  GOTO   23E (RETURN)
+.................... } 
+....................  
+.................... void Auto_retransmit(unsigned int data) 
+.................... { 
+....................    pulse_CSN(); 
+0070:  CALL   004
+....................    spi_write(W_REGISTER+SETUP_RETR); 
+0071:  MOVF   13,W
+0072:  MOVLW  24
+0073:  MOVWF  13
+0074:  BSF    03.5
+0075:  RRF    14,W
+0076:  BTFSS  03.0
+0077:  GOTO   075
+....................    spi_write(data); 
+0078:  BCF    03.5
+0079:  MOVF   39,W
+007A:  MOVWF  13
+007B:  BSF    03.5
+007C:  RRF    14,W
+007D:  BTFSS  03.0
+007E:  GOTO   07C
+....................    pulse_CSN(); 
+007F:  BCF    03.5
+0080:  CALL   004
+0081:  BCF    0A.3
+0082:  BCF    0A.4
+0083:  GOTO   240 (RETURN)
+.................... } 
+....................  
+.................... void RF_channel(unsigned int data) 
+.................... { 
+....................    pulse_CSN(); 
+0084:  CALL   004
+....................    spi_write(W_REGISTER+RF_CH); 
+0085:  MOVF   13,W
+0086:  MOVLW  25
+0087:  MOVWF  13
+0088:  BSF    03.5
+0089:  RRF    14,W
+008A:  BTFSS  03.0
+008B:  GOTO   089
+....................    spi_write(data); 
+008C:  BCF    03.5
+008D:  MOVF   39,W
+008E:  MOVWF  13
+008F:  BSF    03.5
+0090:  RRF    14,W
+0091:  BTFSS  03.0
+0092:  GOTO   090
+....................    pulse_CSN(); 
+0093:  BCF    03.5
+0094:  CALL   004
+0095:  BCF    0A.3
+0096:  BCF    0A.4
+0097:  GOTO   243 (RETURN)
+.................... } 
+....................  
+.................... void RF_set(unsigned int data) 
+.................... { 
+....................    pulse_CSN(); 
+0098:  CALL   004
+....................    spi_write(W_REGISTER+RF_SETUP); 
+0099:  MOVF   13,W
+009A:  MOVLW  26
+009B:  MOVWF  13
+009C:  BSF    03.5
+009D:  RRF    14,W
+009E:  BTFSS  03.0
+009F:  GOTO   09D
+....................    spi_write(data); 
+00A0:  BCF    03.5
+00A1:  MOVF   39,W
+00A2:  MOVWF  13
+00A3:  BSF    03.5
+00A4:  RRF    14,W
+00A5:  BTFSS  03.0
+00A6:  GOTO   0A4
+....................    pulse_CSN(); 
+00A7:  BCF    03.5
+00A8:  CALL   004
+00A9:  BCF    0A.3
+00AA:  BCF    0A.4
+00AB:  GOTO   246 (RETURN)
+.................... } 
+....................  
+.................... void write_STATUS(unsigned int data) 
+.................... { 
+....................    pulse_CSN(); 
+00AC:  CALL   004
+....................    spi_write(W_REGISTER+STATUS); 
+00AD:  MOVF   13,W
+00AE:  MOVLW  27
+00AF:  MOVWF  13
+00B0:  BSF    03.5
+00B1:  RRF    14,W
+00B2:  BTFSS  03.0
+00B3:  GOTO   0B1
+....................    spi_write(data); 
+00B4:  BCF    03.5
+00B5:  MOVF   39,W
+00B6:  MOVWF  13
+00B7:  BSF    03.5
+00B8:  RRF    14,W
+00B9:  BTFSS  03.0
+00BA:  GOTO   0B8
+....................    pulse_CSN(); 
+00BB:  BCF    03.5
+00BC:  CALL   004
+00BD:  RETURN
+.................... } 
+....................  
+.................... unsigned int read_STATUS() 
+.................... { 
+....................    unsigned int data; 
+....................    pulse_CSN(); 
+*
+01BB:  CALL   004
+....................    spi_write(R_REGISTER+STATUS); 
+01BC:  MOVF   13,W
+01BD:  MOVLW  07
+01BE:  MOVWF  13
+01BF:  BSF    03.5
+01C0:  RRF    14,W
+01C1:  BTFSS  03.0
+01C2:  GOTO   1C0
+....................    data=spi_read(0); 
+01C3:  BCF    03.5
+01C4:  MOVF   13,W
+01C5:  CLRF   13
+01C6:  BSF    03.5
+01C7:  RRF    14,W
+01C8:  BTFSS  03.0
+01C9:  GOTO   1C7
+01CA:  BCF    03.5
+01CB:  MOVF   13,W
+01CC:  MOVWF  39
+....................    pulse_CSN(); 
+01CD:  CALL   004
+....................     
+....................    return data; 
+01CE:  MOVF   39,W
+01CF:  MOVWF  78
+.................... } 
+....................  
+.................... unsigned int read_observe_tx() 
+.................... { 
+....................    unsigned int data; 
+....................    pulse_CSN(); 
+....................    spi_write(R_REGISTER+OBSERVE_TX); 
+....................    data=spi_read(); 
+....................    pulse_CSN(); 
+....................     
+....................    return data; 
+.................... } 
+....................  
+.................... void write_RX_ADDR(unsigned int *data,unsigned int address) 
+.................... { 
+....................    pulse_CSN(); 
+*
+00BE:  CALL   004
+....................    spi_write(W_REGISTER+address); 
+00BF:  MOVLW  20
+00C0:  ADDWF  3B,W
+00C1:  MOVWF  3D
+00C2:  MOVF   3D,W
+00C3:  MOVWF  13
+00C4:  BSF    03.5
+00C5:  RRF    14,W
+00C6:  BTFSS  03.0
+00C7:  GOTO   0C5
+....................    for(int i=0;i<5;i++) 
+00C8:  BCF    03.5
+00C9:  CLRF   3C
+00CA:  MOVF   3C,W
+00CB:  SUBLW  04
+00CC:  BTFSS  03.0
+00CD:  GOTO   0E5
+....................    { 
+....................       spi_write(*(data+i)); 
+00CE:  MOVF   3C,W
+00CF:  ADDWF  39,W
+00D0:  MOVWF  78
+00D1:  MOVF   3A,W
+00D2:  MOVWF  7A
+00D3:  BTFSC  03.0
+00D4:  INCF   7A,F
+00D5:  MOVF   78,W
+00D6:  MOVWF  04
+00D7:  BCF    03.7
+00D8:  BTFSC  7A.0
+00D9:  BSF    03.7
+00DA:  MOVF   00,W
+00DB:  MOVWF  3D
+00DC:  MOVF   3D,W
+00DD:  MOVWF  13
+00DE:  BSF    03.5
+00DF:  RRF    14,W
+00E0:  BTFSS  03.0
+00E1:  GOTO   0DF
+00E2:  BCF    03.5
+00E3:  INCF   3C,F
+00E4:  GOTO   0CA
+....................    } 
+....................    pulse_CSN(); 
+00E5:  CALL   004
+00E6:  BCF    0A.3
+00E7:  BCF    0A.4
+00E8:  GOTO   250 (RETURN)
+.................... } 
+.................... /* 
+.................... unsigned int *read_RX_ADDR(unsigned int address) 
+.................... { 
+....................    unsigned int *data; 
+....................    unsigned int d_data[5]; 
+....................    pulse_CSN(); 
+....................    spi_write(R_REGISTER+address); 
+....................    for(int i=0;i<5;i++) 
+....................    { 
+....................       d_data[i]=spi_read(0); 
+....................    } 
+....................    pulse_CSN(); 
+....................     
+....................    data=d_data; 
+....................     
+....................    return data; 
+.................... } 
+.................... */ 
+.................... void read_RX_ADDR(unsigned int address,unsigned int *data) 
+.................... { 
+....................    pulse_CSN(); 
+....................    spi_write(R_REGISTER+address); 
+....................    for(int i=0;i<5;i++) 
+....................    { 
+....................       *(data+i)=spi_read(0); 
+....................    } 
+....................    pulse_CSN(); 
+.................... } 
+....................  
+.................... void write_TX_ADDR(unsigned int *data,unsigned int address) 
+.................... { 
+....................    pulse_CSN(); 
+00E9:  CALL   004
+....................    spi_write(W_REGISTER+address); 
+00EA:  MOVLW  20
+00EB:  ADDWF  3B,W
+00EC:  MOVWF  3D
+00ED:  MOVF   3D,W
+00EE:  MOVWF  13
+00EF:  BSF    03.5
+00F0:  RRF    14,W
+00F1:  BTFSS  03.0
+00F2:  GOTO   0F0
+....................    for(int i=0;i<5;i++) 
+00F3:  BCF    03.5
+00F4:  CLRF   3C
+00F5:  MOVF   3C,W
+00F6:  SUBLW  04
+00F7:  BTFSS  03.0
+00F8:  GOTO   110
+....................    { 
+....................       spi_write(*(data+i)); 
+00F9:  MOVF   3C,W
+00FA:  ADDWF  39,W
+00FB:  MOVWF  78
+00FC:  MOVF   3A,W
+00FD:  MOVWF  7A
+00FE:  BTFSC  03.0
+00FF:  INCF   7A,F
+0100:  MOVF   78,W
+0101:  MOVWF  04
+0102:  BCF    03.7
+0103:  BTFSC  7A.0
+0104:  BSF    03.7
+0105:  MOVF   00,W
+0106:  MOVWF  3D
+0107:  MOVF   3D,W
+0108:  MOVWF  13
+0109:  BSF    03.5
+010A:  RRF    14,W
+010B:  BTFSS  03.0
+010C:  GOTO   10A
+010D:  BCF    03.5
+010E:  INCF   3C,F
+010F:  GOTO   0F5
+....................    } 
+....................    pulse_CSN(); 
+0110:  CALL   004
+0111:  BCF    0A.3
+0112:  BCF    0A.4
+0113:  GOTO   257 (RETURN)
+.................... } 
+.................... /* 
+.................... unsigned int *read_TX_ADDR(unsigned int address) 
+.................... { 
+....................    unsigned int *data; 
+....................    unsigned int d_data[5]; 
+....................    pulse_CSN(); 
+....................    spi_write(R_REGISTER+address); 
+....................    for(int i=0;i<5;i++) 
+....................    { 
+....................       d_data[i]=spi_read(0); 
+....................    } 
+....................    pulse_CSN(); 
+....................     
+....................    data=d_data; 
+....................    return data; 
+.................... } 
+.................... */ 
+.................... void read_TX_ADDR(unsigned int address,unsigned int *data) 
+.................... { 
+....................    pulse_CSN(); 
+....................    spi_write(R_REGISTER+address); 
+....................    for(int i=0;i<5;i++) 
+....................    { 
+....................       *(data+i)=spi_read(0); 
+....................    } 
+....................     
+....................    pulse_CSN(); 
+.................... } 
+....................  
+.................... void write_num_of_points(unsigned int address,unsigned int data) 
+.................... { 
+....................    pulse_CSN(); 
+....................    spi_write(W_REGISTER+address); 
+....................    spi_write(data); 
+....................    pulse_CSN(); 
+.................... } 
+....................  
+.................... unsigned int read_num_of_points(unsigned int address) 
+.................... { 
+....................    unsigned int data; 
+....................    pulse_CSN(); 
+....................    spi_write(R_REGISTER+address); 
+....................    data=spi_read(0); 
+....................    pulse_CSN(); 
+....................     
+....................    return data; 
+.................... } 
+....................  
+.................... unsigned int read_fifo_status() 
+.................... { 
+....................    unsigned int data; 
+....................    pulse_CSN(); 
+....................    spi_write(R_REGISTER+FIFO_STATUS); 
+....................    data=spi_read(0); 
+....................    pulse_CSN(); 
+....................     
+....................    return data; 
+.................... } 
+....................  
+.................... void write_payload(unsigned int *data) 
+.................... { 
+....................    pulse_CSN(); 
+*
+0169:  CALL   004
+....................    spi_write(W_TX_PAYLOAD_NO_ACK); 
+016A:  MOVF   13,W
+016B:  MOVLW  B0
+016C:  MOVWF  13
+016D:  BSF    03.5
+016E:  RRF    14,W
+016F:  BTFSS  03.0
+0170:  GOTO   16E
+....................    for(int i=0;i<i_length(data);i++) 
+0171:  BCF    03.5
+0172:  CLRF   3B
+0173:  MOVF   3A,W
+0174:  MOVWF  3D
+0175:  MOVF   39,W
+0176:  MOVWF  3C
+*
+018B:  MOVF   78,W
+018C:  SUBWF  3B,W
+018D:  BTFSC  03.0
+018E:  GOTO   1A6
+....................    { 
+....................       spi_write(*(data+i)); 
+018F:  MOVF   3B,W
+0190:  ADDWF  39,W
+0191:  MOVWF  78
+0192:  MOVF   3A,W
+0193:  MOVWF  7A
+0194:  BTFSC  03.0
+0195:  INCF   7A,F
+0196:  MOVF   78,W
+0197:  MOVWF  04
+0198:  BCF    03.7
+0199:  BTFSC  7A.0
+019A:  BSF    03.7
+019B:  MOVF   00,W
+019C:  MOVWF  3C
+019D:  MOVF   3C,W
+019E:  MOVWF  13
+019F:  BSF    03.5
+01A0:  RRF    14,W
+01A1:  BTFSS  03.0
+01A2:  GOTO   1A0
+01A3:  BCF    03.5
+01A4:  INCF   3B,F
+01A5:  GOTO   173
+....................    } 
+....................     
+....................    CE_enable; 
+01A6:  BCF    20.0
+01A7:  MOVF   20,W
+01A8:  BSF    03.5
+01A9:  MOVWF  07
+01AA:  BCF    03.5
+01AB:  BSF    07.0
+....................    delay_us(50); 
+01AC:  MOVLW  42
+01AD:  MOVWF  77
+01AE:  DECFSZ 77,F
+01AF:  GOTO   1AE
+01B0:  NOP
+....................    CE_disable; 
+01B1:  BCF    20.0
+01B2:  MOVF   20,W
+01B3:  BSF    03.5
+01B4:  MOVWF  07
+01B5:  BCF    03.5
+01B6:  BCF    07.0
+....................     
+....................    pulse_CSN(); 
+01B7:  CALL   004
+01B8:  BCF    0A.3
+01B9:  BCF    0A.4
+01BA:  GOTO   269 (RETURN)
+.................... } 
+....................  
+.................... void read_payload(unsigned int *data) 
+.................... { 
+....................    pulse_CSN(); 
+....................    CE_enable; 
+....................    spi_write(R_RX_PAYLOAD); 
+....................    for(int i=0;i<1;i++) 
+....................    { 
+....................       *(data+i)=spi_read(0);  
+....................    } 
+....................    pulse_CSN(); 
+....................     
+....................    if(!input(IRQ)) 
+....................    { 
+....................       write_STATUS(0x7E); 
+....................       delay_ms(5); 
+....................       if(RX_DR()) 
+....................       { 
+....................          CE_disable; 
+....................          flushrx(); 
+....................       } 
+....................    } 
+.................... } 
+....................  
+.................... void write_feature(unsigned int data) 
+.................... { 
+....................    pulse_CSN(); 
+*
+0128:  CALL   004
+....................    spi_write(W_REGISTER+FEATURE); 
+0129:  MOVF   13,W
+012A:  MOVLW  3D
+012B:  MOVWF  13
+012C:  BSF    03.5
+012D:  RRF    14,W
+012E:  BTFSS  03.0
+012F:  GOTO   12D
+....................    spi_write(data); 
+0130:  BCF    03.5
+0131:  MOVF   39,W
+0132:  MOVWF  13
+0133:  BSF    03.5
+0134:  RRF    14,W
+0135:  BTFSS  03.0
+0136:  GOTO   134
+....................    pulse_CSN(); 
+0137:  BCF    03.5
+0138:  CALL   004
+0139:  BCF    0A.3
+013A:  BCF    0A.4
+013B:  GOTO   25C (RETURN)
+.................... } 
+....................  
+.................... void write_dynp(unsigned int data) 
+.................... { 
+....................    pulse_CSN(); 
+*
+0114:  CALL   004
+....................    spi_write(W_REGISTER+DYNPD); 
+0115:  MOVF   13,W
+0116:  MOVLW  3C
+0117:  MOVWF  13
+0118:  BSF    03.5
+0119:  RRF    14,W
+011A:  BTFSS  03.0
+011B:  GOTO   119
+....................    spi_write(data); 
+011C:  BCF    03.5
+011D:  MOVF   39,W
+011E:  MOVWF  13
+011F:  BSF    03.5
+0120:  RRF    14,W
+0121:  BTFSS  03.0
+0122:  GOTO   120
+....................    pulse_CSN(); 
+0123:  BCF    03.5
+0124:  CALL   004
+0125:  BCF    0A.3
+0126:  BCF    0A.4
+0127:  GOTO   259 (RETURN)
+.................... } 
+....................  
+.................... void flushtx() 
+.................... { 
+....................    pulse_CSN(); 
+*
+0149:  CALL   004
+....................    spi_write(FLUSH_TX); 
+014A:  MOVF   13,W
+014B:  MOVLW  E1
+014C:  MOVWF  13
+014D:  BSF    03.5
+014E:  RRF    14,W
+014F:  BTFSS  03.0
+0150:  GOTO   14E
+....................    pulse_CSN(); 
+0151:  BCF    03.5
+0152:  CALL   004
+0153:  RETURN
+.................... } 
+....................  
+.................... void flushrx() 
+.................... { 
+....................    pulse_CSN(); 
+*
+013C:  CALL   004
+....................    spi_write(FLUSH_RX); 
+013D:  MOVF   13,W
+013E:  MOVLW  E2
+013F:  MOVWF  13
+0140:  BSF    03.5
+0141:  RRF    14,W
+0142:  BTFSS  03.0
+0143:  GOTO   141
+....................    pulse_CSN(); 
+0144:  BCF    03.5
+0145:  CALL   004
+0146:  BCF    0A.3
+0147:  BCF    0A.4
+0148:  GOTO   25D (RETURN)
+.................... } 
+....................  
+.................... void rf_init() 
+.................... { 
+....................    pulse_CSN(); 
+*
+0016:  CALL   004
+....................    CE_disable; 
+0017:  BCF    20.0
+0018:  MOVF   20,W
+0019:  BSF    03.5
+001A:  MOVWF  07
+001B:  BCF    03.5
+001C:  BCF    07.0
+001D:  BCF    0A.3
+001E:  BCF    0A.4
+001F:  GOTO   233 (RETURN)
+.................... } 
+....................  
+.................... int1 RX_DR() 
+.................... { 
+....................    if((read_STATUS()>>6)&0x01) 
+....................    { 
+....................       return 1; 
+....................    } 
+....................    else 
+....................    { 
+....................       return 0; 
+....................    } 
+.................... } 
+....................  
+.................... int1 TX_DS() 
+.................... { 
+....................    if((read_STATUS()>>5)&0x01) 
+*
+01D0:  SWAPF  78,W
+01D1:  MOVWF  77
+01D2:  RRF    77,F
+01D3:  MOVLW  07
+01D4:  ANDWF  77,F
+01D5:  MOVF   77,W
+01D6:  ANDLW  01
+01D7:  BTFSC  03.2
+01D8:  GOTO   1DD
+....................    { 
+....................       return 1; 
+01D9:  MOVLW  01
+01DA:  MOVWF  78
+01DB:  GOTO   1DF
+....................    } 
+01DC:  GOTO   1DF
+....................    else 
+....................    { 
+....................       return 0; 
+01DD:  MOVLW  00
+01DE:  MOVWF  78
+....................    } 
+01DF:  BCF    0A.3
+01E0:  BCF    0A.4
+01E1:  GOTO   279 (RETURN)
+.................... } 
+....................  
+.................... int1 MAX_RT() 
+.................... { 
+....................    if((read_STATUS()>>4)&0x01) 
+....................    { 
+....................       return 1; 
+....................    } 
+....................    else 
+....................    { 
+....................       return 0; 
+....................    } 
+.................... } 
+....................  
+.................... unsigned int RX_P_NO() 
+.................... { 
+....................    return ((read_STATUS()>>1)&0x07); 
+.................... } 
+....................  
+.................... void standby_1() 
+.................... { 
+....................    CE_disable; 
+.................... } 
+....................  
+....................  
+.................... #define trisd *((unsigned int*)0x88) 
+.................... #define portd *((unsigned int*)0x08) 
+.................... #define trisb *((unsigned int*)0x86) 
+.................... #define portb *((unsigned int*)0x06) 
+....................  
+.................... unsigned int Rx_address[]={0xB3, 0xB4, 0xB5, 0xB6, 0x05}; 
+*
+0203:  MOVLW  B3
+0204:  BCF    03.5
+0205:  MOVWF  21
+0206:  MOVLW  B4
+0207:  MOVWF  22
+0208:  MOVLW  B5
+0209:  MOVWF  23
+020A:  MOVLW  B6
+020B:  MOVWF  24
+020C:  MOVLW  05
+020D:  MOVWF  25
+.................... unsigned int Tx_address[]={0xB3, 0xB4, 0xB5, 0xB6, 0x05}; 
+020E:  MOVLW  B3
+020F:  MOVWF  26
+0210:  MOVLW  B4
+0211:  MOVWF  27
+0212:  MOVLW  B5
+0213:  MOVWF  28
+0214:  MOVLW  B6
+0215:  MOVWF  29
+0216:  MOVLW  05
+0217:  MOVWF  2A
+.................... unsigned int *TX; 
+.................... unsigned int *RX; 
+.................... unsigned int data[10]={0x01}; 
+0218:  MOVLW  01
+0219:  MOVWF  2F
+021A:  CLRF   30
+021B:  CLRF   31
+021C:  CLRF   32
+021D:  CLRF   33
+021E:  CLRF   34
+021F:  CLRF   35
+0220:  CLRF   36
+0221:  CLRF   37
+0222:  CLRF   38
+....................  
+.................... void main() 
+*
+01E2:  MOVF   03,W
+01E3:  ANDLW  1F
+01E4:  MOVWF  03
+01E5:  MOVLW  FF
+01E6:  MOVWF  20
+01E7:  BCF    14.5
+01E8:  MOVLW  40
+01E9:  BSF    03.5
+01EA:  MOVWF  14
+01EB:  MOVLW  20
+01EC:  BCF    03.5
+01ED:  MOVWF  14
+01EE:  BCF    20.5
+01EF:  MOVF   20,W
+01F0:  BSF    03.5
+01F1:  MOVWF  07
+01F2:  BCF    03.5
+01F3:  BSF    20.4
+01F4:  MOVF   20,W
+01F5:  BSF    03.5
+01F6:  MOVWF  07
+01F7:  BCF    03.5
+01F8:  BCF    20.3
+01F9:  MOVF   20,W
+01FA:  BSF    03.5
+01FB:  MOVWF  07
+01FC:  BSF    1F.0
+01FD:  BSF    1F.1
+01FE:  BSF    1F.2
+01FF:  BCF    1F.3
+0200:  MOVLW  07
+0201:  MOVWF  1C
+0202:  BCF    03.7
+.................... { 
+....................    TX=Tx_address; 
+*
+0223:  CLRF   2C
+0224:  MOVLW  26
+0225:  MOVWF  2B
+....................    RX=Rx_address; 
+0226:  CLRF   2E
+0227:  MOVLW  21
+0228:  MOVWF  2D
+....................    /////////// 
+....................    trisd=0x00; 
+0229:  BSF    03.5
+022A:  CLRF   08
+....................    portd=0x00; 
+022B:  BCF    03.5
+022C:  CLRF   08
+....................    trisb=0x00; 
+022D:  BSF    03.5
+022E:  CLRF   06
+....................    portb=0x80; 
+022F:  MOVLW  80
+0230:  BCF    03.5
+0231:  MOVWF  06
+....................    //PTX device 
+....................     
+....................    rf_init(); 
+0232:  GOTO   016
+....................    TX_config(0x0E); 
+0233:  MOVLW  0E
+0234:  MOVWF  39
+0235:  GOTO   020
+....................    Enhanced_Shockburst(0x00); 
+0236:  CLRF   39
+0237:  GOTO   034
+....................    RX_addresses(0x3F); 
+0238:  MOVLW  3F
+0239:  MOVWF  39
+023A:  GOTO   048
+....................    address_width(0x03); 
+023B:  MOVLW  03
+023C:  MOVWF  39
+023D:  GOTO   05C
+....................    Auto_retransmit(0x00); 
+023E:  CLRF   39
+023F:  GOTO   070
+....................    RF_channel(0x02); 
+0240:  MOVLW  02
+0241:  MOVWF  39
+0242:  GOTO   084
+....................    RF_set(0x26); 
+0243:  MOVLW  26
+0244:  MOVWF  39
+0245:  GOTO   098
+....................    write_STATUS(0x7E); 
+0246:  MOVLW  7E
+0247:  MOVWF  39
+0248:  CALL   0AC
+....................    write_RX_ADDR(RX,0x0A); 
+0249:  MOVF   2E,W
+024A:  MOVWF  3A
+024B:  MOVF   2D,W
+024C:  MOVWF  39
+024D:  MOVLW  0A
+024E:  MOVWF  3B
+024F:  GOTO   0BE
+....................    write_TX_ADDR(TX,0x10); 
+0250:  MOVF   2C,W
+0251:  MOVWF  3A
+0252:  MOVF   2B,W
+0253:  MOVWF  39
+0254:  MOVLW  10
+0255:  MOVWF  3B
+0256:  GOTO   0E9
+....................    write_dynp(0x00); 
+0257:  CLRF   39
+0258:  GOTO   114
+....................    write_feature(0x01); 
+0259:  MOVLW  01
+025A:  MOVWF  39
+025B:  GOTO   128
+....................     
+....................    flushrx(); 
+025C:  GOTO   13C
+....................    flushtx(); 
+025D:  CALL   149
+....................     
+....................    delay_ms(500); 
+025E:  MOVLW  02
+025F:  MOVWF  39
+0260:  MOVLW  FA
+0261:  MOVWF  3A
+0262:  CALL   154
+0263:  DECFSZ 39,F
+0264:  GOTO   260
+....................    while(true) 
+....................    { 
+....................       write_payload(data); 
+0265:  CLRF   3A
+0266:  MOVLW  2F
+0267:  MOVWF  39
+0268:  GOTO   169
+....................       portd=data[0]; 
+0269:  MOVF   2F,W
+026A:  MOVWF  08
+....................       if(!input(IRQ)) 
+026B:  BSF    20.2
+026C:  MOVF   20,W
+026D:  BSF    03.5
+026E:  MOVWF  07
+026F:  BCF    03.5
+0270:  BTFSC  07.2
+0271:  GOTO   27E
+....................       { 
+....................          write_STATUS(0x7E); 
+0272:  MOVLW  7E
+0273:  MOVWF  39
+0274:  CALL   0AC
+....................          delay_ms(5); 
+0275:  MOVLW  05
+0276:  MOVWF  3A
+0277:  CALL   154
+....................          if(TX_DS()) 
+0278:  GOTO   1BB
+0279:  MOVF   78,F
+027A:  BTFSC  03.2
+027B:  GOTO   27E
+....................          { 
+....................             flushtx(); 
+027C:  CALL   149
+....................             data[0]++; 
+027D:  INCF   2F,F
+....................          } 
+....................       } 
+....................       delay_ms(100); 
+027E:  MOVLW  64
+027F:  MOVWF  3A
+0280:  CALL   154
+0281:  GOTO   265
+....................    } 
+.................... } 
+0282:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F32   HS NOWDT PUT NOBROWNOUT NOLVP NOCPD NOWRT NODEBUG NOPROTECT
